@@ -1,20 +1,21 @@
 {
+  "accent_version": ">=0.24.0",
+  "artifact": {
+    "checksum": "sha256:8cf99d56fd30fe8b3f2efbef7de26e2d22452e257f02ff3e1b8f704ac9cfb231",
+    "size_bytes": 6333,
+    "url": "https://github.com/AccentCMS/template-starter-site/releases/download/v1.0.0/starter-site-1.0.0.tar.gz"
+  },
+  "author": "accentx",
   "contract_version": 2,
+  "distribution": "registry",
+  "entry_signature": "eyJ0eXAiOiJKV1QiLCJhbGciOiJFZERTQSJ9.eyJkb2MiOiI1NzZjZjg1ZDhhMGJlMzA5YWE0YmI0MGRhYWJkMTU0ZGY3ZmY2Nzg0YWE1MmI0Y2Q5ODQ0ODQ3NDcyODdkM2EzIn0.qBHvFQDPO-Bgt8jctN1gtdKecgVFBgjh1MPx-U7163hWCv0WCsCBMV1z9jo5dVA4ACsUey47vEdYeUu6-8ytAQ",
   "kind": "template",
   "name": "starter-site",
-  "version": "1.0.0",
-  "accent_version": ">=0.24.0",
-  "published_at": "2026-08-10T17:04:20Z",
-  "trust": "official",
-  "author": "accentx",
-  "distribution": "registry",
-  "artifact": {
-    "url": "https://github.com/AccentCMS/template-starter-site/releases/download/v1.0.0/starter-site-1.0.0.tar.gz",
-    "checksum": "sha256:8cf99d56fd30fe8b3f2efbef7de26e2d22452e257f02ff3e1b8f704ac9cfb231",
-    "size_bytes": 6333
-  },
   "pricing": {
     "model": "free"
   },
+  "published_at": "2026-08-10T17:04:20Z",
+  "trust": "official",
+  "version": "1.0.0",
   "yanked": false
 }
