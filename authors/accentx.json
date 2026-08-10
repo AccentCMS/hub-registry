@@ -5,5 +5,6 @@
   "identity_verified": true,
   "license_public_key": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAdSrfI8IBjUUnpApuuie3AtLrRQ/MmMwMEcEDN7Xcw2U=\n-----END PUBLIC KEY-----\n",
   "name": "AccentX",
+  "record_signature": "eyJ0eXAiOiJKV1QiLCJhbGciOiJFZERTQSJ9.eyJkb2MiOiJjNTU2YjMxODRkYjhhMmFlYzQzMmE2YzkzMmUxOGE5MTBiNTQ3MzhmYTNjOTM5MTFlZmU0ZjY0ZDY0YjJlNTNhIn0.9mq3dkxQWqsYyMyYVuZ7Mkradv0XUHBVfYTZoNbyxMjGFoOYY5VuY8nWkrS47-8ei8XWYucwSyHnvrT62pmRAA",
   "url": "https://accentcms.dev"
 }
