@@ -1,0 +1,20 @@
+{
+  "contract_version": 2,
+  "kind": "template",
+  "name": "starter-site",
+  "version": "1.0.0",
+  "accent_version": ">=0.24.0",
+  "published_at": "2026-08-10T17:04:20Z",
+  "trust": "official",
+  "author": "accentx",
+  "distribution": "registry",
+  "artifact": {
+    "url": "https://github.com/AccentCMS/template-starter-site/releases/download/v1.0.0/starter-site-1.0.0.tar.gz",
+    "checksum": "sha256:8cf99d56fd30fe8b3f2efbef7de26e2d22452e257f02ff3e1b8f704ac9cfb231",
+    "size_bytes": 6333
+  },
+  "pricing": {
+    "model": "free"
+  },
+  "yanked": false
+}
