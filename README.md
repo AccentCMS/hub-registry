@@ -40,19 +40,10 @@ Open a pull request. Automated checks are the gate -- there is no human in the
 admission path -- and [CONTRIBUTING.md](CONTRIBUTING.md) says what they
 enforce, what each trust tier means, and when an entry is delisted.
 
-## Contract v2
+## Reading it
 
-This tree implements **contract version 2**, and it is a clean break from the
-v1 `registry.json` that used to sit at the root. That file is gone, so a
-pre-v2 `accent` binary now fails with
-
-```
-registry returned HTTP 404 Not Found: https://raw.githubusercontent.com/accentcms/plugin-registry/main/registry.json
-```
-
-The remedy is to upgrade. The break is deliberate: v1 was plugin-only, listed
-loose files rather than a single checksummed archive, and had no signature and
-no yank path. It never held an entry, so nothing was installed from it.
-
-The client reads this registry from `hub.registry_url`, which defaults to
+Every document here declares `"contract_version": 2`. The client reads the
+registry from `hub.registry_url`, which defaults to
 `https://raw.githubusercontent.com/AccentCMS/hub-registry/main`.
+
+You need a current `accent` to install from it.
