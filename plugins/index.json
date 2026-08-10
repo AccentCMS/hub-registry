@@ -1,7 +1,31 @@
 {
   "contract_version": 2,
-  "entries": [],
-  "generated_at": "2026-08-09T00:00:00Z",
-  "index_signature": "eyJ0eXAiOiJKV1QiLCJhbGciOiJFZERTQSJ9.eyJkb2MiOiIyYzQxNzQxNTQxZGNjYTY2NTk3NjA1ZjA0ZDQ2MTFlZmYzNWEzM2FlODJmYTc4NGU2NzU4OTNkNzE0YmM2ZDFhIn0.MjeMCM9dWmaXunAQLuNcSr39x5VM0r6abKxMzOYc8EAQYLfG2Ewd8WQ9XjRg_GRjtEqFFtQAH-DAPvSCocj-Cw",
+  "entries": [
+    {
+      "author": "accentx",
+      "description": "Contact form with CSRF protection and SMTP delivery.",
+      "homepage": "https://accentcms.dev",
+      "latest_version": "0.1.0",
+      "license": "MIT",
+      "name": "accent-contact",
+      "pricing": {
+        "model": "free"
+      },
+      "repository": "https://github.com/AccentCMS/accent-contact",
+      "tags": [
+        "contact",
+        "forms",
+        "email",
+        "smtp",
+        "islands"
+      ],
+      "trust": "official",
+      "updated_at": "2026-08-10T17:03:59Z",
+      "versions": [
+        "0.1.0"
+      ]
+    }
+  ],
+  "generated_at": "2026-08-10T21:32:36Z",
   "kind": "plugin"
 }
