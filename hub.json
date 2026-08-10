@@ -1,0 +1,6 @@
+{
+  "contract_version": 2,
+  "name": "Accent CMS Hub",
+  "kinds": ["plugin", "theme", "template"],
+  "generated_at": "2026-08-09T00:00:00Z"
+}

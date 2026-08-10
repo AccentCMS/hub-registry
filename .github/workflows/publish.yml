@@ -1,0 +1,119 @@
+# The merge half of the gate: stamp the registry's signatures, then prove the
+# stamped tree satisfies the profile that requires them.
+#
+# A signature here asserts one thing -- this document was accepted into this
+# registry and has not been altered since. Not that the code is safe, not that
+# anyone reviewed it. It is nonetheless load-bearing: an author record's
+# `record_signature` is what authenticates a vendor's `license_public_key`, so
+# the commerce chain terminates in a key the client already trusts.
+#
+# Re-stamping is a no-op. Ed25519 is deterministic, so a document whose
+# signature already covers it is rewritten to identical bytes; a merge that
+# touched one manifest commits one file. That is also how the contract's
+# "re-stamp whenever `yanked` flips, so no signature outlives the document it
+# covers" is satisfied without a rule of its own -- flipping `yanked` changes
+# the digest, so it changes the signature.
+name: Sign and publish
+
+on:
+  push:
+    branches: [main]
+  # A key rotation re-stamps the whole tree with no commit to trigger it.
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# Two merges landing at once must not race each other's push.
+concurrency:
+  group: registry-publish
+  cancel-in-progress: false
+
+env:
+  TOOL_VERSION: tool-v0.1.0
+
+jobs:
+  sign:
+    name: Stamp signatures
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Download the validator and signer
+        # Into RUNNER_TEMP, never the checkout. This job commits what the tool
+        # changed, so a binary downloaded into the tree would be committed
+        # with it.
+        run: |
+          curl --fail --silent --show-error --location \
+            --output "${RUNNER_TEMP}/hub-registry" \
+            "https://github.com/AccentCMS/hub-registry/releases/download/${TOOL_VERSION}/hub-registry-x86_64-unknown-linux-gnu"
+          chmod +x "${RUNNER_TEMP}/hub-registry"
+          "${RUNNER_TEMP}/hub-registry" --version
+
+      - name: Stamp every signature
+        # Fail-closed on a missing key. An unsigned merged tree is not a
+        # degraded registry, it is an unusable one: the client refuses a
+        # document it cannot verify, so every install would fail with a
+        # signature error naming nothing anyone could act on.
+        #
+        # The key reaches the tool as a file, not an argument, so it never
+        # appears in a process listing. It must be an unencrypted PKCS#8 PEM.
+        env:
+          HUB_PRIVATE_KEY_PEM: ${{ secrets.HUB_PRIVATE_KEY_PEM }}
+        run: |
+          if [ -z "${HUB_PRIVATE_KEY_PEM}" ]; then
+            echo "::error::HUB_PRIVATE_KEY_PEM is unset. The merged tree cannot be signed, and a client refuses any registry document it cannot verify. Register the registry signing key as a repository secret."
+            exit 1
+          fi
+          key="${RUNNER_TEMP}/hub.key.pem"
+          umask 077
+          printf '%s\n' "${HUB_PRIVATE_KEY_PEM}" > "${key}"
+          trap 'rm -f "${key}"' EXIT
+          "${RUNNER_TEMP}/hub-registry" sign . --key "${key}"
+
+      - name: Validate against the published profile
+        # The same checks the pull request passed, plus the requirement that
+        # every signature is now present. Running it *after* stamping is what
+        # makes the previous step's output the thing being judged, rather than
+        # a step nobody re-read.
+        #
+        # No `--baseline` here, deliberately: the pull request already enforced
+        # immutability against `origin/main`, and `HEAD~1` on a merged branch
+        # can be an intermediate commit of the same pull request -- a manifest
+        # added and then corrected within it would read as a mutation. A false
+        # red on this job leaves the tree on main unsigned, which every client
+        # refuses, so the run is left with the comparison it can make honestly
+        # and the immutability rules reported as skipped.
+        run: |
+          set +e
+          "${RUNNER_TEMP}/hub-registry" validate . --profile published
+          status=$?
+          set -e
+          case "${status}" in
+            0) ;;
+            3)
+              echo "::error::A host serving a listed artifact could not be reached, so the checksum and archive checks did not complete on the merged tree. Nothing was pushed; re-run this job."
+              exit 1
+              ;;
+            *) exit "${status}" ;;
+          esac
+
+      - name: Commit the signatures
+        # `GITHUB_TOKEN` pushes do not trigger workflows, so this cannot loop.
+        # Nothing to commit is the normal outcome of a re-run and of a merge
+        # that changed no signable document.
+        run: |
+          if git diff --quiet; then
+            echo "Every signature already covered its document; nothing to commit."
+            exit 0
+          fi
+          git config user.name  "accent-hub[bot]"
+          git config user.email "hub@accentcms.dev"
+          # `-a`, not `add --all`: signing only ever rewrites documents that
+          # are already tracked, so anything untracked in the checkout is
+          # something this job has no business committing.
+          git commit -a -m "Stamp registry signatures"
+          git push origin HEAD:main
