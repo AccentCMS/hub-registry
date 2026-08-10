@@ -1,0 +1,78 @@
+# Every submission runs through here, and there is nothing behind it.
+#
+# The hub admits entries on automated checks alone -- no human is in the
+# admission path -- so whatever this job does not check is not checked. It
+# runs the same `hub-registry validate` a contributor can run locally, against
+# the same schemas, with the network checks on.
+#
+# It deliberately uses **no secrets**. A submission arrives as a pull request
+# from a fork, and GitHub gives a fork's `pull_request` run no access to
+# repository secrets; a gate that needed one would be a gate that never ran on
+# the submissions it exists for. That is also why the validator is downloaded
+# as a public prebuilt binary rather than built from its (private) source.
+name: Validate submission
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+env:
+  # Pinned, not "latest": this binary *is* the admission policy, and a policy
+  # that changes without a commit here is one nobody reviewed. Bump it in the
+  # same pull request that wants the new behaviour.
+  TOOL_VERSION: tool-v0.2.0
+
+jobs:
+  validate:
+    name: Contract checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the merge result
+        uses: actions/checkout@v6
+        with:
+          # `--baseline` compares against the tree as it is on main, which
+          # needs history rather than a shallow tip.
+          fetch-depth: 0
+
+      - name: Fetch the base branch
+        # A pull_request checkout has no `origin/main` remote-tracking ref of
+        # its own, and the baseline is named by revision.
+        run: git fetch --no-tags --prune origin +refs/heads/main:refs/remotes/origin/main
+
+      - name: Download the validator
+        # Into RUNNER_TEMP, never the checkout: a binary sitting in the tree
+        # is a file the validator would walk and a merge job would commit.
+        run: |
+          curl --fail --silent --show-error --location \
+            --output "${RUNNER_TEMP}/hub-registry" \
+            "https://github.com/AccentCMS/hub-registry/releases/download/${TOOL_VERSION}/hub-registry-x86_64-unknown-linux-gnu"
+          chmod +x "${RUNNER_TEMP}/hub-registry"
+          "${RUNNER_TEMP}/hub-registry" --version
+
+      - name: Validate against the submitted profile
+        # `--profile submitted` forbids the three registry signatures on what
+        # this pull request *adds*, because only the registry can produce one
+        # and requiring it would make every third-party submission
+        # unmergeable. `--baseline` is what tells the two apart: without it
+        # the rule is reported as skipped and enforces nothing.
+        #
+        # Exit 3 means a third-party host could not be reached, which is not a
+        # verdict on the submission -- but merging without having re-verified
+        # the checksum would admit bytes nobody checked, so it stops the run
+        # and says to re-run it.
+        run: |
+          set +e
+          "${RUNNER_TEMP}/hub-registry" validate . --profile submitted --baseline origin/main
+          status=$?
+          set -e
+          case "${status}" in
+            0) ;;
+            3)
+              echo "::error::A host serving a submitted artifact could not be reached, so the checksum and archive checks did not complete. This is not a rejection -- re-run this job when the host is back."
+              exit 1
+              ;;
+            *) exit "${status}" ;;
+          esac

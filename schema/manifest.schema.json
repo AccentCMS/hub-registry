@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hub.accentcms.dev/schema/manifest.schema.json",
+  "title": "Version manifest (<kind>s/<name>/<version>.json)",
+  "description": "The machine-checkable form of m053 section 6.3 -- the only document that decides what gets installed. The root validates shape alone; a validator selects #/$defs/submitted or #/$defs/published, because entry_signature can only be produced by the registry and so is forbidden on a submission and required once published (section 6.7). Rules that span two documents -- the owner match against repository, index-matches-manifests, immutability across a diff -- cannot be expressed here and live in the validator.",
+  "$ref": "#/$defs/base",
+  "$defs": {
+    "base": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract_version",
+        "kind",
+        "name",
+        "version",
+        "accent_version",
+        "published_at",
+        "trust",
+        "author",
+        "distribution",
+        "pricing"
+      ],
+      "properties": {
+        "contract_version": { "const": 2 },
+        "kind": {
+          "description": "Must match the directory this manifest was read from.",
+          "enum": ["plugin", "theme", "template"]
+        },
+        "name": {
+          "description": "Kebab-case identifier, unique within the kind.",
+          "$ref": "#/$defs/name"
+        },
+        "version": {
+          "description": "Exact semver, equal to the filename stem.",
+          "$ref": "#/$defs/semver"
+        },
+        "accent_version": {
+          "description": "Host range supported, as a semver requirement such as \">=0.24.0\". Matched against the crate version with any prerelease suffix removed (section 11.5). The requirement grammar admits comparator lists, tilde/caret operators and wildcards, so no pattern here can settle it: the validator parses it exactly as the client does before any download, and rejects what will not parse.",
+          "type": "string",
+          "minLength": 1
+        },
+        "api_version": {
+          "description": "Plugin WIT generation, as an exact semver version. Plugins only.",
+          "$ref": "#/$defs/semver"
+        },
+        "published_at": { "$ref": "#/$defs/timestamp" },
+        "trust": {
+          "description": "Provenance and review tier. Never a claim about the code.",
+          "enum": ["official", "verified", "community"]
+        },
+        "author": {
+          "description": "Handle resolving to authors/<handle>.json.",
+          "$ref": "#/$defs/handle"
+        },
+        "distribution": {
+          "description": "registry: fetched from artifact.url. external: delivered out of band by the vendor.",
+          "enum": ["registry", "external"]
+        },
+        "artifact": { "$ref": "#/$defs/artifact" },
+        "pricing": { "$ref": "#/$defs/pricing" },
+        "islands": {
+          "description": "Island component names this artifact registers. Island names share one global registry per page, so a plugin should namespace its own (acme-forms:signup).",
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "entry_signature": {
+          "description": "Registry signature over the whole manifest. Written by CI at merge, never by the submitter.",
+          "$ref": "#/$defs/jws"
+        },
+        "attestation": {
+          "description": "Additive vendor provenance. Never the sole gate.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "url"],
+          "properties": {
+            "kind": { "type": "string", "minLength": 1 },
+            "url": { "$ref": "#/$defs/https_url" }
+          }
+        },
+        "yanked": {
+          "description": "Retracted: still resolvable by exact pin, never chosen as latest.",
+          "type": "boolean"
+        }
+      },
+      "allOf": [
+        {
+          "description": "A registry entry is fetched from a URL, so it publishes one, its digest, and its transfer size.",
+          "if": { "properties": { "distribution": { "const": "registry" } }, "required": ["distribution"] },
+          "then": {
+            "required": ["artifact"],
+            "properties": {
+              "artifact": { "required": ["url", "checksum", "size_bytes"] }
+            }
+          }
+        },
+        {
+          "description": "An external entry carries no download URL -- that is what makes it external. It may still publish a digest so install --from can verify a hand-delivered file.",
+          "if": { "properties": { "distribution": { "const": "external" } }, "required": ["distribution"] },
+          "then": {
+            "properties": {
+              "artifact": { "not": { "required": ["url"] } }
+            }
+          }
+        },
+        {
+          "description": "api_version is the WIT generation a component was built against. Neither a theme nor a template has one.",
+          "if": { "properties": { "kind": { "const": "plugin" } }, "required": ["kind"] },
+          "then": { "required": ["api_version"] },
+          "else": { "not": { "required": ["api_version"] } }
+        }
+      ]
+    },
+    "submitted": {
+      "description": "A submission: the registry holds the signing key, so the author cannot supply entry_signature and a document carrying one is rejected. Requiring it here would make every third-party PR unmergeable.",
+      "allOf": [{ "$ref": "#/$defs/base" }],
+      "not": { "required": ["entry_signature"] }
+    },
+    "published": {
+      "description": "The merged tree: CI has stamped the signature.",
+      "allOf": [{ "$ref": "#/$defs/base" }],
+      "required": ["entry_signature"]
+    },
+    "artifact": {
+      "description": "Where the bytes are and what they must hash to. The URL is an absolute third-party URL, never relative to the registry base: the hub never serves artifact bytes.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["checksum"],
+      "properties": {
+        "url": { "$ref": "#/$defs/https_url" },
+        "checksum": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "size_bytes": {
+          "description": "The transfer size. A bound on the download, never on what it expands to.",
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "pricing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model"],
+      "properties": {
+        "model": { "enum": ["free", "commercial"] },
+        "purchase_url": { "$ref": "#/$defs/https_url" },
+        "seller": {
+          "description": "vendor: the third party sells directly. accentx: sold through the AccentX store.",
+          "enum": ["vendor", "accentx"]
+        },
+        "price_hint": {
+          "description": "Display only. Never authoritative -- the seller's page is.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["amount", "currency", "period"],
+          "properties": {
+            "amount": { "type": "number", "minimum": 0 },
+            "currency": { "type": "string", "pattern": "^[A-Z]{3}$" },
+            "period": { "enum": ["once", "month", "year"] }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "description": "A commercial entry must say where to buy and who takes the money; the CLI prints the first when a licence is missing.",
+          "if": { "properties": { "model": { "const": "commercial" } }, "required": ["model"] },
+          "then": { "required": ["purchase_url", "seller"] },
+          "else": { "not": { "anyOf": [{ "required": ["purchase_url"] }, { "required": ["seller"] }, { "required": ["price_hint"] }] } }
+        }
+      ]
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "handle": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)[.](0|[1-9][0-9]*)[.](0|[1-9][0-9]*)(-((0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*)([.](0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*))*))?([+]([0-9a-zA-Z-]+([.][0-9a-zA-Z-]+)*))?$"
+    },
+    "https_url": {
+      "type": "string",
+      "pattern": "^https://[^\\s]+$"
+    },
+    "timestamp": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}([.][0-9]+)?(Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "jws": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]+[.][A-Za-z0-9_-]*[.][A-Za-z0-9_-]+$"
+    }
+  }
+}

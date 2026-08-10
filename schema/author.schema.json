@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hub.accentcms.dev/schema/author.schema.json",
+  "title": "Author record (authors/<handle>.json)",
+  "description": "The machine-checkable form of m053 section 6.6. The root validates shape alone; a validator selects #/$defs/submitted or #/$defs/published, because record_signature can only be produced by the registry and so is forbidden on a submission and required once published (section 6.7).",
+  "$ref": "#/$defs/base",
+  "$defs": {
+    "base": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contract_version", "handle", "name", "identity_verified"],
+      "properties": {
+        "contract_version": { "const": 2 },
+        "handle": {
+          "description": "Kebab-case, equal to the filename stem.",
+          "$ref": "#/$defs/handle"
+        },
+        "name": {
+          "description": "Display name.",
+          "type": "string",
+          "minLength": 1
+        },
+        "url": {
+          "description": "Homepage.",
+          "$ref": "#/$defs/https_url"
+        },
+        "github": {
+          "description": "GitHub handle.",
+          "type": "string",
+          "minLength": 1
+        },
+        "identity_verified": {
+          "description": "Identity confirmed by registry maintainers. Orthogonal to an artifact's trust tier.",
+          "type": "boolean"
+        },
+        "license_public_key": {
+          "description": "Ed25519 SPKI public key in PEM form; the trust root for this vendor's artifact licences. Required when the author sells anything, which is a cross-document rule the validator enforces against the entries.",
+          "type": "string",
+          "pattern": "^-----BEGIN PUBLIC KEY-----"
+        },
+        "record_signature": {
+          "description": "Registry signature over the whole record. Written by CI at merge, never by the submitter.",
+          "$ref": "#/$defs/jws"
+        }
+      }
+    },
+    "submitted": {
+      "description": "A submission: the registry holds the signing key, so the author cannot supply record_signature and a document carrying one is rejected.",
+      "allOf": [{ "$ref": "#/$defs/base" }],
+      "not": { "required": ["record_signature"] }
+    },
+    "published": {
+      "description": "The merged tree: CI has stamped the signature.",
+      "allOf": [{ "$ref": "#/$defs/base" }],
+      "required": ["record_signature"]
+    },
+    "handle": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "https_url": {
+      "type": "string",
+      "pattern": "^https://[^\\s]+$"
+    },
+    "jws": {
+      "description": "Compact JWS: three base64url segments.",
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]+[.][A-Za-z0-9_-]*[.][A-Za-z0-9_-]+$"
+    }
+  }
+}
