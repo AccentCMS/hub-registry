@@ -1,7 +1,30 @@
 {
   "contract_version": 2,
-  "entries": [],
-  "generated_at": "2026-08-09T00:00:00Z",
-  "index_signature": "eyJ0eXAiOiJKV1QiLCJhbGciOiJFZERTQSJ9.eyJkb2MiOiI3MjA5ZmIyMDI3YzEyYjJkNDM3NzU4NjcyYmVhM2I5NjU3Y2ZhOWZhNjJkZjMzMDFkOTU4ZDE0NWQ5YTc3MjRkIn0.MCe78pLpgRIhif8Ql_onaptwdQCgl6ZznS4A4dB0tBvcznFUDnKb8ZjI0l5aLamyAI4waRnUs8jHAWOgXqcTDw",
+  "entries": [
+    {
+      "author": "accentx",
+      "description": "Dark-first developer theme with a monochromatic palette and emerald accents.",
+      "homepage": "https://accentcms.dev",
+      "latest_version": "1.0.0",
+      "license": "MIT",
+      "name": "agentic",
+      "pricing": {
+        "model": "free"
+      },
+      "repository": "https://github.com/AccentCMS/theme-agentic",
+      "tags": [
+        "dark",
+        "developer",
+        "documentation",
+        "sass"
+      ],
+      "trust": "official",
+      "updated_at": "2026-08-10T17:04:13Z",
+      "versions": [
+        "1.0.0"
+      ]
+    }
+  ],
+  "generated_at": "2026-08-10T22:08:27Z",
   "kind": "theme"
 }
