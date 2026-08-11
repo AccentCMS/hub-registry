@@ -1,0 +1,25 @@
+{
+  "accent_version": ">=0.24.0",
+  "api_version": "0.1.0",
+  "artifact": {
+    "checksum": "sha256:ee2942c34097be1537f5da58ea8b9a3a154cf760dd6712592eaed4248617956a",
+    "size_bytes": 36919,
+    "url": "https://github.com/AccentCMS/accent-contact/releases/download/v0.2.0/accent-contact-0.2.0.tar.gz"
+  },
+  "author": "accentx",
+  "contract_version": 2,
+  "distribution": "registry",
+  "islands": [
+    "accent-contact:reading-time",
+    "accent-contact:word-count"
+  ],
+  "kind": "plugin",
+  "name": "accent-contact",
+  "pricing": {
+    "model": "free"
+  },
+  "published_at": "2026-08-11T18:12:37Z",
+  "trust": "official",
+  "version": "0.2.0",
+  "yanked": false
+}
