@@ -9,6 +9,7 @@
   "author": "accentx",
   "contract_version": 2,
   "distribution": "registry",
+  "entry_signature": "eyJ0eXAiOiJKV1QiLCJhbGciOiJFZERTQSJ9.eyJkb2MiOiI1OGNmNDk0MjRmZDM4ZWZmNjJhZmM2ZGM2OGNkNWM3YmJkMTJiOTQ1NWY5MGEyZTI0MDdkY2UzZTJjZWI4ZDA4In0.mNxItRW42nEhy7fVJs7UNVFUAznvPVZXkcrA36r8bYpsOup0pW69WQp1LyfOZ_JTyDJqGQDmJUP4s_vho9xgCg",
   "islands": [
     "accent-contact:reading-time",
     "accent-contact:word-count"
