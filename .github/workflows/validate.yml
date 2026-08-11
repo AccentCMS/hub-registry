@@ -23,7 +23,7 @@ env:
   # Pinned, not "latest": this binary *is* the admission policy, and a policy
   # that changes without a commit here is one nobody reviewed. Bump it in the
   # same pull request that wants the new behaviour.
-  TOOL_VERSION: tool-v0.2.0
+  TOOL_VERSION: tool-v0.3.0
 
 jobs:
   validate:
