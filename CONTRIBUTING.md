@@ -147,6 +147,38 @@ signed, including `community`. It asserts one thing: this document was
 accepted into this registry and has not been altered since. It says nothing
 about the code, which the hub does not host, build or run.
 
+### The path to `verified`
+
+`verified` is granted on request, when there is review capacity. There is no
+queue you advance through by waiting, and neither age nor download counts
+ever imply it. To request it:
+
+1. **Be listed first.** Review starts from a `community` entry that already
+   passes every automated check; there is no fast path around the gate.
+2. **Open an issue** titled `verified: <kind>/<name>`, naming the listed
+   version and the repository tag it was built from.
+
+What review looks at, and what it records in the promotion pull request:
+
+- the source at the named tag, and that the archive the artifact URL serves
+  is what that source produces;
+- for a plugin, that the capabilities it requests match what the code does
+  with them;
+- that the listing's metadata -- description, pricing, homepage -- describes
+  the thing honestly;
+- **identity**: the maintainer confirms you control the owner account both
+  `repository` and `artifact.url` live under, and sets `identity_verified`
+  on your author record in the same pull request that flips `trust`. The
+  validator enforces the pairing, so neither field can move alone.
+- for a `distribution: external` entry, a maintainer must have obtained an
+  actually-delivered artifact and recorded its digest in the review --
+  reviewing the repository alone is not sufficient, because the repository
+  is not what ships.
+
+`verified` means "a maintainer reviewed this before listing" -- exactly once,
+at the reviewed version. It is not a promise about future versions, and it
+is not a security audit.
+
 ## Updating and retracting
 
 - **A new version** is a new manifest file plus a regenerated index. The old
@@ -166,13 +198,49 @@ An entry is yanked and then delisted when:
 - its repository is deleted, made private, or is no longer reachable
 - it is found to be malicious, or to be typosquatting another entry's name
 
-A scheduled link-health job re-fetches every artifact URL and repository and
-flags what has rotted. An index rots from the outside, and a registry that
-does not notice is worse than no registry.
+A scheduled link-health job (`health.yml`, daily) re-fetches every artifact
+URL and probes every repository, and flags what has rotted. An index rots
+from the outside, and a registry that does not notice is worse than no
+registry. A red run is a finding no re-run will change; a third-party outage
+stays green with a warning and is simply retried tomorrow. The job only ever
+flags -- delisting itself is always a reviewed pull request.
 
-Delisting removes a listing. It cannot remove software from anyone's machine,
-and it is not a takedown of the author's repository, which the hub never
-controlled.
+### The delisting runbook
+
+A red health run names its finding: `artifact/not-published` (the URL is
+dead), `artifact/checksum-mismatch` (the host serves different bytes than
+the registry vouched for), or `repository/not-found` (deleted, or made
+private -- the two are indistinguishable from outside). From there:
+
+1. **Open a tracking issue** quoting the finding line, one issue per entry.
+   Everything else links back to it.
+2. **Attempt contact** through the listed `repository` and `homepage` -- an
+   issue on the author's tracker where one exists. A moved release or a
+   renamed repository is fixed by the author updating the entry (a new
+   manifest version with the corrected URL), and that closes the issue.
+3. **Grace window: 14 days** from the tracking issue, for link rot only. A
+   checksum mismatch gets none -- bytes changing behind a published checksum
+   is treated as substitution until the author shows otherwise, and the yank
+   goes first, the conversation second. The same applies to a malicious or
+   typosquatting finding.
+4. **Retract by pull request**: set `"yanked": true` on **every** version's
+   manifest, run `hub-registry generate .`, link the tracking issue. CI
+   re-stamps the signatures on merge -- no key ceremony is involved.
+5. **The terminal state is a tombstone, not a deletion.** Every version
+   yanked, the entry still listed. The contract prohibits deleting a
+   published manifest, and disappearing from discovery is exactly what
+   retraction must not do: an exact pin still resolves (so an existing
+   lockfile still names what it named), the tracking issue holds the reason,
+   and the name stays occupied -- which is itself the anti-typosquatting
+   property. The generator keeps a fully-yanked entry listed by design.
+
+If the rot is later cured -- the release restored, the repository public
+again -- un-yanking by pull request is equally legitimate: `yanked` is one
+of the two fields allowed to move on a published manifest.
+
+Delisting removes nothing but the recommendation. It cannot remove software
+from anyone's machine, and it is not a takedown of the author's repository,
+which the hub never controlled.
 
 ## Licensing your artifact
 
