@@ -1,0 +1,21 @@
+{
+  "contract_version": 2,
+  "kind": "plugin",
+  "name": "llm-tagging",
+  "version": "0.2.0",
+  "accent_version": ">=0.26.0",
+  "api_version": "0.2.0",
+  "published_at": "2026-09-06T13:03:16Z",
+  "trust": "official",
+  "author": "accentx",
+  "distribution": "registry",
+  "artifact": {
+    "url": "https://github.com/AccentCMS/llm-tagging/releases/download/v0.2.0/llm-tagging-0.2.0.tar.gz",
+    "checksum": "sha256:a359ec9dce7b6e3f73c21413442c88e12c63ec03284b13600f3ceca68be4581d",
+    "size_bytes": 83087
+  },
+  "pricing": {
+    "model": "free"
+  },
+  "yanked": false
+}
