@@ -1,25 +1,26 @@
 {
-  "contract_version": 2,
-  "kind": "plugin",
-  "name": "accent-contact",
-  "version": "0.3.0",
   "accent_version": ">=0.26.0",
   "api_version": "0.2.0",
-  "published_at": "2026-09-06T13:03:16Z",
-  "trust": "official",
-  "author": "accentx",
-  "distribution": "registry",
   "artifact": {
-    "url": "https://github.com/AccentCMS/accent-contact/releases/download/v0.3.0/accent-contact-0.3.0.tar.gz",
     "checksum": "sha256:3eefc5b650330365d29e645bb0b60a365cd6eb1d484ef14f2ea17cca966dcbbf",
-    "size_bytes": 37006
+    "size_bytes": 37006,
+    "url": "https://github.com/AccentCMS/accent-contact/releases/download/v0.3.0/accent-contact-0.3.0.tar.gz"
   },
-  "pricing": {
-    "model": "free"
-  },
+  "author": "accentx",
+  "contract_version": 2,
+  "distribution": "registry",
+  "entry_signature": "eyJ0eXAiOiJKV1QiLCJhbGciOiJFZERTQSJ9.eyJkb2MiOiJhNzY0NjZhMDg0MGQ0NzU1ZjNmZjE3NmI2ZDI2NzIzMmY0ZWYzMjg4MTk3ZDBjN2U5NWFmNzY4MDI1Y2ViZjY3In0.WAQ60SGvl5Cp5tQgh7k9bj8xZE9fSYUJpr_-8bqHf43zDkN6mLglxrGdCbM2R-MJsdrb4VZHTwzmmzzb78ApCw",
   "islands": [
     "accent-contact:reading-time",
     "accent-contact:word-count"
   ],
+  "kind": "plugin",
+  "name": "accent-contact",
+  "pricing": {
+    "model": "free"
+  },
+  "published_at": "2026-09-06T13:03:16Z",
+  "trust": "official",
+  "version": "0.3.0",
   "yanked": false
 }
