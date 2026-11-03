@@ -1,0 +1,74 @@
+# The looking half of a promise CONTRIBUTING has made since launch: "a
+# scheduled link-health job re-fetches every artifact URL and repository and
+# flags what has rotted."
+#
+# Submission-time validation proves an entry was true when it merged. Nothing
+# proves it stays true: a third-party host deletes the release, replaces the
+# bytes behind a published checksum, or takes the repository private, and
+# without this job the first person to find out is the next user's failed
+# install. `hub-registry health` re-runs the same download, checksum, size and
+# archive checks the admission gate ran, and additionally probes every entry's
+# `repository` URL.
+#
+# The exit split is the whole design:
+#   0 -- clean; nothing to do.
+#   1 -- something rotted. A finding no re-run will change: a dead artifact
+#        URL, bytes that no longer match their checksum, a vanished
+#        repository. The red run IS the flag; CONTRIBUTING's delisting
+#        runbook says what to do with it. The job never auto-delists.
+#   3 -- a third-party host did not answer. That is somebody else's outage,
+#        not rot: it annotates a warning and stays green, because a page
+#        nobody can act on trains people to ignore red.
+name: Link health
+
+on:
+  schedule:
+    # Daily is deliberate while the catalog is single digits. Revisit the
+    # cadence as the catalog grows -- every listed artifact is downloaded in
+    # full on each run, so at hundreds of entries this becomes real traffic
+    # against hosts that owe us nothing.
+    - cron: "17 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  # Pinned for the same reason validate.yml pins: this binary is the policy.
+  # Bump it in a reviewed pull request, never implicitly.
+  TOOL_VERSION: tool-v0.4.0
+
+jobs:
+  health:
+    name: Link health sweep
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the tree
+        # Shallow is fine: health takes the tree exactly as it is on main.
+        # There is no baseline and no profile -- every finding is against the
+        # world, not against a diff.
+        uses: actions/checkout@v6
+
+      - name: Download the validator
+        # Into RUNNER_TEMP, never the checkout: a binary sitting in the tree
+        # is a file the validator would walk.
+        run: |
+          curl --fail --silent --show-error --location \
+            --output "${RUNNER_TEMP}/hub-registry" \
+            "https://github.com/AccentCMS/hub-registry/releases/download/${TOOL_VERSION}/hub-registry-x86_64-unknown-linux-gnu"
+          chmod +x "${RUNNER_TEMP}/hub-registry"
+          "${RUNNER_TEMP}/hub-registry" --version
+
+      - name: Sweep every artifact and repository URL
+        run: |
+          set +e
+          "${RUNNER_TEMP}/hub-registry" health .
+          status=$?
+          set -e
+          case "${status}" in
+            0) ;;
+            3)
+              echo "::warning::A third-party host could not be reached, so part of the sweep did not complete. This is an outage, not rot -- the next scheduled run retries it."
+              ;;
+            *) exit "${status}" ;;
+          esac

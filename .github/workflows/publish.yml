@@ -30,7 +30,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  TOOL_VERSION: tool-v0.3.0
+  TOOL_VERSION: tool-v0.4.0
 
 jobs:
   sign:
