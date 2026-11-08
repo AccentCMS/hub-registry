@@ -1,0 +1,20 @@
+{
+  "contract_version": 2,
+  "kind": "theme",
+  "name": "papermood",
+  "version": "1.1.0",
+  "accent_version": ">=0.28.0",
+  "published_at": "2026-11-08T20:22:52Z",
+  "trust": "official",
+  "author": "accentx",
+  "distribution": "registry",
+  "artifact": {
+    "url": "https://github.com/AccentCMS/Papermood/releases/download/v1.1.0/papermood-1.1.0.tar.gz",
+    "checksum": "sha256:732c027f31074cc1998046a1e00c37a138ef7769afd4e202c7f28cb573119a94",
+    "size_bytes": 36849
+  },
+  "pricing": {
+    "model": "free"
+  },
+  "yanked": false
+}
