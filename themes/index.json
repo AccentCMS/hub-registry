@@ -28,7 +28,7 @@
       "author": "accentx",
       "description": "A PaperMod-style blog theme: post cards, dark mode, archives, tags, and client-side search.",
       "homepage": "https://accentcms.github.io/Papermood/",
-      "latest_version": "1.0.0",
+      "latest_version": "1.1.0",
       "license": "MIT",
       "name": "papermood",
       "pricing": {
@@ -43,13 +43,13 @@
         "search"
       ],
       "trust": "official",
-      "updated_at": "2026-11-07T21:10:14Z",
+      "updated_at": "2026-11-08T20:22:52Z",
       "versions": [
-        "1.0.0"
+        "1.0.0",
+        "1.1.0"
       ]
     }
   ],
-  "generated_at": "2026-11-07T21:13:12Z",
-  "index_signature": "eyJ0eXAiOiJKV1QiLCJhbGciOiJFZERTQSJ9.eyJkb2MiOiIzNmZiZDU2MTkyMDJmNzYxOTExYWY2NDQwOWJhNjNkZDY5YWY4NDIwZDY1YjZmNzM2Mzk5YTcyMGQ5MWJlYjA1In0.FPWmdDZgQBd6iFXK0ppOFd7kpV6GwCSMjUvi16Vso-2YcdnMx1Nu0OPkxO4O9f_diGJFDNYv_j5X7ZQnpZrSBg",
+  "generated_at": "2026-11-08T20:27:11Z",
   "kind": "theme"
 }
