@@ -3,6 +3,29 @@
   "entries": [
     {
       "author": "accentx",
+      "description": "Blog starter on the Papermood theme: post cards, dark mode, archives, search, and a trilingual interface.",
+      "homepage": "https://hub.accentcms.dev/themes/papermood",
+      "latest_version": "1.0.0",
+      "license": "MIT",
+      "name": "papermood-blog",
+      "pricing": {
+        "model": "free"
+      },
+      "repository": "https://github.com/AccentCMS/template-papermood-blog",
+      "tags": [
+        "blog",
+        "papermood",
+        "i18n",
+        "starter"
+      ],
+      "trust": "official",
+      "updated_at": "2026-11-08T09:24:15Z",
+      "versions": [
+        "1.0.0"
+      ]
+    },
+    {
+      "author": "accentx",
       "description": "Minimal starter project with home, blog and events sections.",
       "homepage": "https://accentcms.dev",
       "latest_version": "1.0.0",
@@ -24,7 +47,6 @@
       ]
     }
   ],
-  "generated_at": "2026-08-10T22:24:52Z",
-  "index_signature": "eyJ0eXAiOiJKV1QiLCJhbGciOiJFZERTQSJ9.eyJkb2MiOiI2MmU5OWUyYTQwNjVkZDE4NjRkMzU4Y2RlYjE3NDczM2ZmMzllNmI1ZTkwN2EyOTc5ZTljMmNhZjI2YWYyOGMxIn0.PKw61w3MgHpcOZKTXJRz9wY8DgOeSYyngl-lrOBZUoiOdVJT5CIqTa1wKbZ9_2ytmnixO8US39MMu0kNjG6cCQ",
+  "generated_at": "2026-11-08T09:52:28Z",
   "kind": "template"
 }
