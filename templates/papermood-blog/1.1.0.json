@@ -1,20 +1,21 @@
 {
+  "accent_version": ">=0.28.0",
+  "artifact": {
+    "checksum": "sha256:4ba2a8f0fbf37f746de98af07269f390ed77c1c2ec09cc044b46486726a0a196",
+    "size_bytes": 43089,
+    "url": "https://github.com/AccentCMS/template-papermood-blog/releases/download/v1.1.0/papermood-blog-1.1.0.tar.gz"
+  },
+  "author": "accentx",
   "contract_version": 2,
+  "distribution": "registry",
+  "entry_signature": "eyJ0eXAiOiJKV1QiLCJhbGciOiJFZERTQSJ9.eyJkb2MiOiI3ODlmNjc4YWExMDEzZTI4NTE4ZjYzY2Y5YjgwYjMzYzE2MTRlN2MxZGEwYWIyNzM3ZDQzMzI4NTQxNGQ4MGJkIn0.C0XUvCGC5jgaRTgsYp4gAUGWvyawTfVlszj0u94z_l_7gN4tBwALW85i6cDfFUrCkXYDn1HWUaQoZUtTXNEyDg",
   "kind": "template",
   "name": "papermood-blog",
-  "version": "1.1.0",
-  "accent_version": ">=0.28.0",
-  "published_at": "2026-11-08T20:36:42Z",
-  "trust": "official",
-  "author": "accentx",
-  "distribution": "registry",
-  "artifact": {
-    "url": "https://github.com/AccentCMS/template-papermood-blog/releases/download/v1.1.0/papermood-blog-1.1.0.tar.gz",
-    "checksum": "sha256:4ba2a8f0fbf37f746de98af07269f390ed77c1c2ec09cc044b46486726a0a196",
-    "size_bytes": 43089
-  },
   "pricing": {
     "model": "free"
   },
+  "published_at": "2026-11-08T20:36:42Z",
+  "trust": "official",
+  "version": "1.1.0",
   "yanked": false
 }
