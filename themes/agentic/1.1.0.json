@@ -1,20 +1,21 @@
 {
+  "accent_version": ">=0.27.2",
+  "artifact": {
+    "checksum": "sha256:83930921078c84135f54c0bdaf4376fc11b546837df6ae46beba8ff0b689735c",
+    "size_bytes": 31418,
+    "url": "https://github.com/AccentCMS/theme-agentic/releases/download/v1.1.0/agentic-1.1.0.tar.gz"
+  },
+  "author": "accentx",
   "contract_version": 2,
+  "distribution": "registry",
+  "entry_signature": "eyJ0eXAiOiJKV1QiLCJhbGciOiJFZERTQSJ9.eyJkb2MiOiI4MjJkNTNjODdjNjhkNDY5YTYxZTIzMWNlOTEzMGFhYmZjOGNjODdiNWM0YjQxOTI3ZjQxYjllOGMzMTcwZTU1In0.P1duRZZ5-yAyYyM2HiqRgN09SVm5blgQ8iVrAvCqt9KD-wlqQb0rNVWvjGWyx2rgna-8hqRGF6lB0306RJyxAA",
   "kind": "theme",
   "name": "agentic",
-  "version": "1.1.0",
-  "accent_version": ">=0.27.2",
-  "published_at": "2026-11-15T18:22:33Z",
-  "trust": "official",
-  "author": "accentx",
-  "distribution": "registry",
-  "artifact": {
-    "url": "https://github.com/AccentCMS/theme-agentic/releases/download/v1.1.0/agentic-1.1.0.tar.gz",
-    "checksum": "sha256:83930921078c84135f54c0bdaf4376fc11b546837df6ae46beba8ff0b689735c",
-    "size_bytes": 31418
-  },
   "pricing": {
     "model": "free"
   },
+  "published_at": "2026-11-15T18:22:33Z",
+  "trust": "official",
+  "version": "1.1.0",
   "yanked": false
 }
