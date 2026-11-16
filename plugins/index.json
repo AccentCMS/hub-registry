@@ -31,7 +31,7 @@
       "author": "accentx",
       "description": "Tags and summarises pages with an LLM provider of your choosing.",
       "homepage": "https://accentcms.dev",
-      "latest_version": "0.2.1",
+      "latest_version": "0.3.0",
       "license": "MIT",
       "name": "llm-tagging",
       "pricing": {
@@ -46,15 +46,15 @@
         "content"
       ],
       "trust": "official",
-      "updated_at": "2026-09-25T06:04:50Z",
+      "updated_at": "2026-11-16T07:59:45Z",
       "versions": [
         "0.1.0",
         "0.2.0",
-        "0.2.1"
+        "0.2.1",
+        "0.3.0"
       ]
     }
   ],
-  "generated_at": "2026-09-25T06:07:22Z",
-  "index_signature": "eyJ0eXAiOiJKV1QiLCJhbGciOiJFZERTQSJ9.eyJkb2MiOiJjMGNhMTIwODdmYjI5NmU2MTliYzhhZDliMjA4YzljNzZjYWY2NTczMDRkYzEwNzc4YzU3ZTAwMTk4ZTRhZWNmIn0.pUygNhZmYRvdo_vzfVSEhzochqrJ7ibQDvvymZOJa8zyKp8KNadAk_9CzvPNfHqrB4u8oICiUYyjSeKuyYy9BQ",
+  "generated_at": "2026-11-16T08:01:09Z",
   "kind": "plugin"
 }
